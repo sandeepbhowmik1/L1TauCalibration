@@ -1,0 +1,37 @@
+# Compressed ieta 5->2 bits.
+# Index is ieta (5 bits). Compressed ieta is encoded on 2 bits
+# anything after # is ignored with the exception of the header
+# the header is first valid line starting with #<header> versionStr(unused but may be in future) nrBitsAddress nrBitsData </header>
+#<header> V8 5 2 </header>
+0 0 #iEta=0
+1 0 #iEta=1
+2 0 #iEta=2
+3 0 #iEta=3
+4 0 #iEta=4
+5 0 #iEta=5
+6 1 #iEta=6
+7 1 #iEta=7
+8 1 #iEta=8
+9 1 #iEta=9
+10 1 #iEta=10
+11 1 #iEta=11
+12 2 #iEta=12
+13 2 #iEta=13
+14 2 #iEta=14
+15 2 #iEta=15
+16 2 #iEta=16
+17 2 #iEta=17
+18 3 #iEta=18
+19 3 #iEta=19
+20 3 #iEta=20
+21 3 #iEta=21
+22 3 #iEta=22
+23 3 #iEta=23
+24 3 #iEta=24
+25 3 #iEta=25
+26 3 #iEta=26
+27 3 #iEta=27
+28 3 #iEta=28
+29 3 #iEta=29
+30 3 #iEta=30
+31 3 #iEta=31
