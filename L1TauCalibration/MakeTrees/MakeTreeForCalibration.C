@@ -21,12 +21,18 @@
 #include <math.h>
 
 using namespace std;
-
-void MakeTreeForCalibration(TString InputFileName = "/home/sbhowmik/RootTree/L1TauTrigger/Run3/L1TauCalibration_20210727/rootTree_MC_VBFHToTauTau_L1_RECO_reEmulTPs_20210727_0.root") 
+void MakeTreeForCalibration()
 {
-  TChain data("Ntuplizer_noTagAndProbe_TagAndProbe");
-  //TChain data("Ntuplizer_TagAndProbe");
-  data.Add(InputFileName.Data());
+  TString fileName_In = "/home/sbhowmik/RootTree/L1TauTrigger/Run3/L1TauCalibration_20210727/rootTree_MC_VBFHToTauTau_L1_RECO_reEmulTPs_20210727_0.root";
+  TString treeName_In = "Ntuplizer_noTagAndProbe_TagAndProbe";
+  TString fileName_Out = "/home/sbhowmik/RootTree/L1TauTrigger/Run3/L1TauCalibration_20210727/rootTree_forCalibration_MC_VBFHToTauTau_L1_RECO_reEmulTPs_20210727.root";
+  TString treeName_Out = "outTreeForCalibration";
+
+  TFile fileIn(fileName_In.Data(),"READ");
+  TTree* treeIn = (TTree*)fileIn.Get(treeName_In);
+  TFile fileOut(fileName_Out, "RECREATE");
+  TTree* treeOut = new TTree(treeName_Out, treeName_Out);
+
   Int_t           RunNumber = 0;
   ULong64_t       EventNumber = 0;
   Int_t           lumi = 0;
@@ -91,37 +97,37 @@ void MakeTreeForCalibration(TString InputFileName = "/home/sbhowmik/RootTree/L1T
   TBranch        *b_l1tEmuRawEt;   //!
   TBranch        *b_l1tEmuIsoEt;   //!
 
-  data.SetBranchAddress("RunNumber", &RunNumber, &b_RunNumber);
-  data.SetBranchAddress("EventNumber", &EventNumber, &b_EventNumber);
-  data.SetBranchAddress("lumi", &lumi, &b_lumi);
-  data.SetBranchAddress("tauPt", &tauPt, &b_tauPt);
-  data.SetBranchAddress("tauEta", &tauEta, &b_tauEta);
-  data.SetBranchAddress("tauPhi", &tauPhi, &b_tauPhi);
-  data.SetBranchAddress("tauCharge", &tauCharge, &b_tauCharge);
-  data.SetBranchAddress("tauDecayMode", &tauDecayMode, &b_tauDecayMode);
-  data.SetBranchAddress("hasTriggerMuonType", &hasTriggerMuonType, &b_hasTriggerMuonType);
-  data.SetBranchAddress("hasTriggerTauType", &hasTriggerTauType, &b_hasTriggerTauType);
-  data.SetBranchAddress("isMatched", &isMatched, &b_isMatched);
-  data.SetBranchAddress("isOS", &isOS, &b_isOS);
-  data.SetBranchAddress("foundJet", &foundJet, &b_foundJet);
-  data.SetBranchAddress("Nvtx", &Nvtx, &b_Nvtx);
-  data.SetBranchAddress("l1tPt", &l1tPt, &b_l1tPt);
-  data.SetBranchAddress("l1tEta", &l1tEta, &b_l1tEta);
-  data.SetBranchAddress("l1tPhi", &l1tPhi, &b_l1tPhi);
-  data.SetBranchAddress("l1tQual", &l1tQual, &b_l1tQual);
-  data.SetBranchAddress("l1tIso", &l1tIso, &b_l1tIso);
-  data.SetBranchAddress("l1tEmuPt", &l1tEmuPt, &b_l1tEmuPt);
-  data.SetBranchAddress("l1tEmuEta", &l1tEmuEta, &b_l1tEmuEta);
-  data.SetBranchAddress("l1tEmuPhi", &l1tEmuPhi, &b_l1tEmuPhi);
-  data.SetBranchAddress("l1tEmuQual", &l1tEmuQual, &b_l1tEmuQual);
-  data.SetBranchAddress("l1tEmuIso", &l1tEmuIso, &b_l1tEmuIso);
-  data.SetBranchAddress("l1tEmuNTT", &l1tEmuNTT, &b_l1tEmuNTT);
-  data.SetBranchAddress("l1tEmuHasEM", &l1tEmuHasEM, &b_l1tEmuHasEM);
-  data.SetBranchAddress("l1tEmuIsMerged", &l1tEmuIsMerged, &b_l1tEmuIsMerged);
-  data.SetBranchAddress("l1tEmuTowerIEta", &l1tEmuTowerIEta, &b_l1tEmuTowerIEta);
-  data.SetBranchAddress("l1tEmuTowerIPhi", &l1tEmuTowerIPhi, &b_l1tEmuTowerIPhi);
-  data.SetBranchAddress("l1tEmuRawEt", &l1tEmuRawEt, &b_l1tEmuRawEt);
-  data.SetBranchAddress("l1tEmuIsoEt", &l1tEmuIsoEt, &b_l1tEmuIsoEt);
+  treeIn->SetBranchAddress("RunNumber", &RunNumber, &b_RunNumber);
+  treeIn->SetBranchAddress("EventNumber", &EventNumber, &b_EventNumber);
+  treeIn->SetBranchAddress("lumi", &lumi, &b_lumi);
+  treeIn->SetBranchAddress("tauPt", &tauPt, &b_tauPt);
+  treeIn->SetBranchAddress("tauEta", &tauEta, &b_tauEta);
+  treeIn->SetBranchAddress("tauPhi", &tauPhi, &b_tauPhi);
+  treeIn->SetBranchAddress("tauCharge", &tauCharge, &b_tauCharge);
+  treeIn->SetBranchAddress("tauDecayMode", &tauDecayMode, &b_tauDecayMode);
+  treeIn->SetBranchAddress("hasTriggerMuonType", &hasTriggerMuonType, &b_hasTriggerMuonType);
+  treeIn->SetBranchAddress("hasTriggerTauType", &hasTriggerTauType, &b_hasTriggerTauType);
+  treeIn->SetBranchAddress("isMatched", &isMatched, &b_isMatched);
+  treeIn->SetBranchAddress("isOS", &isOS, &b_isOS);
+  treeIn->SetBranchAddress("foundJet", &foundJet, &b_foundJet);
+  treeIn->SetBranchAddress("Nvtx", &Nvtx, &b_Nvtx);
+  treeIn->SetBranchAddress("l1tPt", &l1tPt, &b_l1tPt);
+  treeIn->SetBranchAddress("l1tEta", &l1tEta, &b_l1tEta);
+  treeIn->SetBranchAddress("l1tPhi", &l1tPhi, &b_l1tPhi);
+  treeIn->SetBranchAddress("l1tQual", &l1tQual, &b_l1tQual);
+  treeIn->SetBranchAddress("l1tIso", &l1tIso, &b_l1tIso);
+  treeIn->SetBranchAddress("l1tEmuPt", &l1tEmuPt, &b_l1tEmuPt);
+  treeIn->SetBranchAddress("l1tEmuEta", &l1tEmuEta, &b_l1tEmuEta);
+  treeIn->SetBranchAddress("l1tEmuPhi", &l1tEmuPhi, &b_l1tEmuPhi);
+  treeIn->SetBranchAddress("l1tEmuQual", &l1tEmuQual, &b_l1tEmuQual);
+  treeIn->SetBranchAddress("l1tEmuIso", &l1tEmuIso, &b_l1tEmuIso);
+  treeIn->SetBranchAddress("l1tEmuNTT", &l1tEmuNTT, &b_l1tEmuNTT);
+  treeIn->SetBranchAddress("l1tEmuHasEM", &l1tEmuHasEM, &b_l1tEmuHasEM);
+  treeIn->SetBranchAddress("l1tEmuIsMerged", &l1tEmuIsMerged, &b_l1tEmuIsMerged);
+  treeIn->SetBranchAddress("l1tEmuTowerIEta", &l1tEmuTowerIEta, &b_l1tEmuTowerIEta);
+  treeIn->SetBranchAddress("l1tEmuTowerIPhi", &l1tEmuTowerIPhi, &b_l1tEmuTowerIPhi);
+  treeIn->SetBranchAddress("l1tEmuRawEt", &l1tEmuRawEt, &b_l1tEmuRawEt);
+  treeIn->SetBranchAddress("l1tEmuIsoEt", &l1tEmuIsoEt, &b_l1tEmuIsoEt);
 
   ULong64_t       out_indexevents = 0;
   Int_t           out_runNumber = 0;
@@ -160,35 +166,30 @@ void MakeTreeForCalibration(TString InputFileName = "/home/sbhowmik/RootTree/L1T
   int out_Nvtx = 0;
   float out_Target = 0;
 
-  TString OutputFileName = "/home/sbhowmik/RootTree/L1TauTrigger/Run3/L1TauCalibration_20210727/rootTree_forCalibration_MC_VBFHToTauTau_L1_RECO_reEmulTPs_20210727.root";
+  treeOut->Branch("EventNumber",&out_indexevents,"EventNumber/l");
+  treeOut->Branch("RunNumber",&out_runNumber,"RunNumber/I");
+  treeOut->Branch("Lumi",&out_lumi,"lumi/I");
+  treeOut->Branch("OfflineTau_pt",  &out_tauPt,  "OfflineTau_pt/F");
+  treeOut->Branch("OfflineTau_eta", &out_tauEta, "OfflineTau_eta/F");
+  treeOut->Branch("OfflineTau_phi", &out_tauPhi, "OfflineTau_phi/F");
+  treeOut->Branch("OfflineTau_decayMode",  &out_tauDecayMode,  "OfflineTau_decayMode/I");
+  treeOut->Branch("L1Tau_pt",  &out_l1tEmuPt,  "L1Tau_pt/F");
+  treeOut->Branch("L1Tau_eta", &out_l1tEmuEta, "L1Tau_eta/F");
+  treeOut->Branch("L1Tau_phi", &out_l1tEmuPhi, "L1Tau_phi/F");
+  treeOut->Branch("L1Tau_nTT", &out_l1tEmuNTT, "L1Tau_nTT/I");
+  treeOut->Branch("L1Tau_hasEM", &out_l1tEmuHasEM, "L1Tau_hasEM/I");
+  treeOut->Branch("L1Tau_isMerged", &out_l1tEmuIsMerged, "L1Tau_isMerged/I");
+  treeOut->Branch("L1Tau_IEta", &out_l1tEmuTowerIEta, "L1Tau_IEta/I");
+  treeOut->Branch("L1Tau_RawIEt", &out_l1tEmuRawEt, "L1Tau_RawIEt/I");
+  treeOut->Branch("L1Tau_Iso", &out_l1tEmuIsoEt, "L1Tau_Iso/I");
+  treeOut->Branch("OfflineTau_isMatched", &out_isMatched, "OfflineTau_isMatched/O");//needs to be filled
+  treeOut->Branch("Target", &out_Target, "Target/F");
+  treeOut->Branch("L1Tau_Qual", &out_l1tEmuQual, "L1Tau_Qual/I");
+  treeOut->Branch("L1Tau_IsoFlag", &out_l1tEmuIso, "L1Tau_IsoFlag/I");
 
-  TFile f(OutputFileName.Data(),"RECREATE");
-  TTree outTree("outTreeForCalibration","outTreeForCalibration");  
-  
-  outTree.Branch("EventNumber",&out_indexevents,"EventNumber/l");
-  outTree.Branch("RunNumber",&out_runNumber,"RunNumber/I");
-  outTree.Branch("Lumi",&out_lumi,"lumi/I");
-  outTree.Branch("OfflineTau_pt",  &out_tauPt,  "OfflineTau_pt/F");
-  outTree.Branch("OfflineTau_eta", &out_tauEta, "OfflineTau_eta/F");
-  outTree.Branch("OfflineTau_phi", &out_tauPhi, "OfflineTau_phi/F");
-  outTree.Branch("OfflineTau_decayMode",  &out_tauDecayMode,  "OfflineTau_decayMode/I");
-  outTree.Branch("L1Tau_pt",  &out_l1tEmuPt,  "L1Tau_pt/F");
-  outTree.Branch("L1Tau_eta", &out_l1tEmuEta, "L1Tau_eta/F");
-  outTree.Branch("L1Tau_phi", &out_l1tEmuPhi, "L1Tau_phi/F");
-  outTree.Branch("L1Tau_nTT", &out_l1tEmuNTT, "L1Tau_nTT/I");
-  outTree.Branch("L1Tau_hasEM", &out_l1tEmuHasEM, "L1Tau_hasEM/I");
-  outTree.Branch("L1Tau_isMerged", &out_l1tEmuIsMerged, "L1Tau_isMerged/I");
-  outTree.Branch("L1Tau_IEta", &out_l1tEmuTowerIEta, "L1Tau_IEta/I");
-  outTree.Branch("L1Tau_RawIEt", &out_l1tEmuRawEt, "L1Tau_RawIEt/I");
-  outTree.Branch("L1Tau_Iso", &out_l1tEmuIsoEt, "L1Tau_Iso/I");
-  outTree.Branch("OfflineTau_isMatched", &out_isMatched, "OfflineTau_isMatched/O");//needs to be filled
-  outTree.Branch("Target", &out_Target, "Target/F");
-  outTree.Branch("L1Tau_Qual", &out_l1tEmuQual, "L1Tau_Qual/I");
-  outTree.Branch("L1Tau_IsoFlag", &out_l1tEmuIso, "L1Tau_IsoFlag/I");
-
-  for(UInt_t i = 0 ; i < data.GetEntries() ; ++i)
+  for(UInt_t i = 0 ; i < treeIn->GetEntries() ; ++i)
     {
-      data.GetEntry(i);
+      treeIn->GetEntry(i);
       // cout<<"Entry #"<<i<<endl;
       if(i%10000==0) cout<<"Entry #"<<i<<endl;
 
@@ -262,11 +263,11 @@ void MakeTreeForCalibration(TString InputFileName = "/home/sbhowmik/RootTree/L1T
 	  //out_Target = tauPt/(l1tPt->at(iMatchedL1Tau));
 	  out_Target = tauPt/(l1tEmuRawEt->at(iMatchedL1Tau)/2.);
 
-	  outTree.Fill();
+	  treeOut->Fill();
 
 	}
     }
 
 
-  outTree.Write();
+  treeOut->Write();
 }

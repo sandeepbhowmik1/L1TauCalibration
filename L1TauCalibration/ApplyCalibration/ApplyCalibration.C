@@ -102,8 +102,24 @@ Int_t FindBinCorrespondencenTT(Int_t nTT_fine)
   return -1;
 }
 
-void ApplyCalibration(TString InputFileName = "/home/sbhowmik/RootTree/L1TauTrigger/Run3/L1TauCalibration_20210727/rootTree_forCalibration_compressed_MC_VBFHToTauTau_L1_RECO_reEmulTPs_20210727.root")
+void ApplyCalibration()
 {
+  TString fileName_In = "/home/sbhowmik/RootTree/L1TauTrigger/Run3/L1TauCalibration_20210727/rootTree_forCalibration_compressed_MC_VBFHToTauTau_L1_RECO_reEmulTPs_20210727.root";
+  TString treeName_In = "outTreeForCalibration";
+  TString fileName_LUT = "/home/sbhowmik/RootTree/L1TauTrigger/Run3/L1TauCalibration_20210727/corrections_Trigger_Stage2_2021_compressedieta_compressedE_hasEM_isMerged_20210727.root";
+  TString histName_LUT_0 = "LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_2021_compressedieta_compressedE_hasEM_isMerged_20210727";
+  TString histName_LUT_1 = "LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_2021_compressedieta_compressedE_hasEM_isMerged_20210727";
+  TString fileName_Out = "/home/sbhowmik/RootTree/L1TauTrigger/Run3/L1TauCalibration_20210727/rootTree_calibratedOutput_MC_VBF_20210727.root";
+  TString treeName_Out = "outTreeForCalibration";
+
+  TFile fileIn(fileName_In.Data(),"READ");
+  TTree* treeIn = (TTree*)fileIn.Get(treeName_In);
+  TFile fileLUT(fileName_LUT.Data(),"READ");
+  TH3F* histLUT_0 = (TH3F*)fileLUT.Get(histName_LUT_0);
+  TH3F* histLUT_1 = (TH3F*)fileLUT.Get(histName_LUT_1);
+  TFile fileOut(fileName_Out, "RECREATE");
+  TTree* treeOut = new TTree(treeName_Out, treeName_Out);
+
   TH2F* isolation_vs_pt = new TH2F("isolation_vs_pt","isolation_vs_pt",100,0,100,NbinsIEt2-1,hardcodedIetBins2double);
   // TH2F* isolation_vs_pt = new TH2F("isolation_vs_pt","isolation_vs_pt",100,0.,100.,200,0.,200.);
   isolation_vs_pt->Clear();
@@ -111,14 +127,6 @@ void ApplyCalibration(TString InputFileName = "/home/sbhowmik/RootTree/L1TauTrig
   const UInt_t nIsolation = 101;
   const Double_t isolationBins[nIsolation] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100};
  
-  TFile f_histos("/home/sbhowmik/RootTree/L1TauTrigger/Run3/L1TauCalibration_20210727/corrections_Trigger_Stage2_2021_compressedieta_compressedE_hasEM_isMerged_20210727.root","READ");
-
-  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_2021_compressedieta_compressedE_hasEM_isMerged_20210727");
-  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_2021_compressedieta_compressedE_hasEM_isMerged_20210727");
-
-  TFile f_in(InputFileName.Data(),"READ");
-  TTree* inTree = (TTree*)f_in.Get("outTreeForCalibration");
-
   Int_t           L1Tau_IEta;
   Int_t           L1Tau_hasEM;
   Float_t         Target;
@@ -140,29 +148,25 @@ void ApplyCalibration(TString InputFileName = "/home/sbhowmik/RootTree/L1TauTrig
   Int_t           supercompressednTT;
   Int_t           L1Tau_Qual;
     
-  inTree->SetBranchAddress("L1Tau_IEta", &L1Tau_IEta);
-  inTree->SetBranchAddress("L1Tau_hasEM", &L1Tau_hasEM);
-  inTree->SetBranchAddress("Target", &Target);
-  inTree->SetBranchAddress("L1Tau_IEt", &L1Tau_IEt);
-  inTree->SetBranchAddress("L1Tau_RawIEt", &L1Tau_RawIEt);
-  inTree->SetBranchAddress("EventNumber", &EventNumber);
-  inTree->SetBranchAddress("RunNumber", &RunNumber);
-  inTree->SetBranchAddress("L1Tau_nTT", &L1Tau_nTT);
-  inTree->SetBranchAddress("L1Tau_pt", &L1Tau_pt);
-  inTree->SetBranchAddress("OfflineTau_pt", &OfflineTau_pt);
-  inTree->SetBranchAddress("OfflineTau_eta", &OfflineTau_eta);
-  inTree->SetBranchAddress("compressedieta", &compressedieta);
-  inTree->SetBranchAddress("compressedE", &compressedE);
-  inTree->SetBranchAddress("L1Tau_Iso", &L1Tau_Iso);
-  inTree->SetBranchAddress("compressednTT", &compressednTT);
-  inTree->SetBranchAddress("OfflineTau_isMatched", &OfflineTau_isMatched);
-  inTree->SetBranchAddress("L1Tau_isMerged", &L1Tau_isMerged);
-  inTree->SetBranchAddress("L1Tau_Qual",&L1Tau_Qual);
+  treeIn->SetBranchAddress("L1Tau_IEta", &L1Tau_IEta);
+  treeIn->SetBranchAddress("L1Tau_hasEM", &L1Tau_hasEM);
+  treeIn->SetBranchAddress("Target", &Target);
+  treeIn->SetBranchAddress("L1Tau_IEt", &L1Tau_IEt);
+  treeIn->SetBranchAddress("L1Tau_RawIEt", &L1Tau_RawIEt);
+  treeIn->SetBranchAddress("EventNumber", &EventNumber);
+  treeIn->SetBranchAddress("RunNumber", &RunNumber);
+  treeIn->SetBranchAddress("L1Tau_nTT", &L1Tau_nTT);
+  treeIn->SetBranchAddress("L1Tau_pt", &L1Tau_pt);
+  treeIn->SetBranchAddress("OfflineTau_pt", &OfflineTau_pt);
+  treeIn->SetBranchAddress("OfflineTau_eta", &OfflineTau_eta);
+  treeIn->SetBranchAddress("compressedieta", &compressedieta);
+  treeIn->SetBranchAddress("compressedE", &compressedE);
+  treeIn->SetBranchAddress("L1Tau_Iso", &L1Tau_Iso);
+  treeIn->SetBranchAddress("compressednTT", &compressednTT);
+  treeIn->SetBranchAddress("OfflineTau_isMatched", &OfflineTau_isMatched);
+  treeIn->SetBranchAddress("L1Tau_isMerged", &L1Tau_isMerged);
+  treeIn->SetBranchAddress("L1Tau_Qual",&L1Tau_Qual);
 
-  TString OutputFileName = "/home/sbhowmik/RootTree/L1TauTrigger/Run3/L1TauCalibration_20210727/rootTree_calibratedOutput_MC_VBF_20210727.root";
-
-  TFile f(OutputFileName.Data(),"RECREATE");
-  TTree outTree("outTreeForCalibration","outTreeForCalibration");  
   Int_t           out_L1Tau_IEta;
   Int_t           out_L1Tau_hasEM;
   Float_t         out_Target;
@@ -186,28 +190,28 @@ void ApplyCalibration(TString InputFileName = "/home/sbhowmik/RootTree/L1TauTrig
   Int_t           out_L1Tau_Qual;
   Float_t         out_L1Tau_CalibConstant;
 
-  outTree.Branch("L1Tau_IEta", &out_L1Tau_IEta,"L1Tau_IEta/I");
-  outTree.Branch("L1Tau_hasEM", &L1Tau_hasEM, "L1Tau_hasEM/I");
-  outTree.Branch("Target", &out_Target, "Target/F");
-  outTree.Branch("L1Tau_IEt", &out_L1Tau_IEt, "L1Tau_IEt/I");
-  outTree.Branch("L1Tau_RawIEt", &out_L1Tau_RawIEt, "L1Tau_RawIEt/I");
-  outTree.Branch("EventNumber", &out_EventNumber, "EventNumber/I");
-  outTree.Branch("RunNumber", &out_RunNumber, "RunNumber/I");
-  outTree.Branch("L1Tau_nTT", &out_L1Tau_nTT, "L1Tau/I");
-  outTree.Branch("L1Tau_pt", &out_L1Tau_pt, "L1Tau_pt/F");
-  outTree.Branch("L1Tau_CalibPt", &out_L1Tau_CalibPt, "L1Tau_CalibPt/F");
-  outTree.Branch("L1Tau_CalibConstant", &out_L1Tau_CalibConstant, "L1Tau_CalibConstant/F");
-  outTree.Branch("OfflineTau_pt", &out_OfflineTau_pt, "OfflineTau_pt/F");
-  outTree.Branch("OfflineTau_eta", &out_OfflineTau_eta, "OfflineTau_eta/F");
-  outTree.Branch("compressedieta", &out_compressedieta, "compressedieta/I");
-  outTree.Branch("compressedE", &out_compressedE, "compressedE/I");
-  outTree.Branch("L1Tau_Iso", &out_L1Tau_Iso, "L1Tau_Iso/I");
-  outTree.Branch("compressednTT", &out_compressednTT, "compressednTT/I");
-  outTree.Branch("OfflineTau_isMatched", &out_OfflineTau_isMatched, "OfflineTau_isMatched/I");
-  outTree.Branch("L1Tau_isMerged", &out_L1Tau_isMerged, "L1Tau_isMerged/I");
-  outTree.Branch("supercompressedE", &out_supercompressedE, "supercompressedE/I");
-  outTree.Branch("supercompressednTT", &out_supercompressednTT, "supercompressednTT/I");
-  outTree.Branch("L1Tau_Qual",&out_L1Tau_Qual, "out_L1Tau_Qual/I");
+  treeOut->Branch("L1Tau_IEta", &out_L1Tau_IEta,"L1Tau_IEta/I");
+  treeOut->Branch("L1Tau_hasEM", &L1Tau_hasEM, "L1Tau_hasEM/I");
+  treeOut->Branch("Target", &out_Target, "Target/F");
+  treeOut->Branch("L1Tau_IEt", &out_L1Tau_IEt, "L1Tau_IEt/I");
+  treeOut->Branch("L1Tau_RawIEt", &out_L1Tau_RawIEt, "L1Tau_RawIEt/I");
+  treeOut->Branch("EventNumber", &out_EventNumber, "EventNumber/I");
+  treeOut->Branch("RunNumber", &out_RunNumber, "RunNumber/I");
+  treeOut->Branch("L1Tau_nTT", &out_L1Tau_nTT, "L1Tau/I");
+  treeOut->Branch("L1Tau_pt", &out_L1Tau_pt, "L1Tau_pt/F");
+  treeOut->Branch("L1Tau_CalibPt", &out_L1Tau_CalibPt, "L1Tau_CalibPt/F");
+  treeOut->Branch("L1Tau_CalibConstant", &out_L1Tau_CalibConstant, "L1Tau_CalibConstant/F");
+  treeOut->Branch("OfflineTau_pt", &out_OfflineTau_pt, "OfflineTau_pt/F");
+  treeOut->Branch("OfflineTau_eta", &out_OfflineTau_eta, "OfflineTau_eta/F");
+  treeOut->Branch("compressedieta", &out_compressedieta, "compressedieta/I");
+  treeOut->Branch("compressedE", &out_compressedE, "compressedE/I");
+  treeOut->Branch("L1Tau_Iso", &out_L1Tau_Iso, "L1Tau_Iso/I");
+  treeOut->Branch("compressednTT", &out_compressednTT, "compressednTT/I");
+  treeOut->Branch("OfflineTau_isMatched", &out_OfflineTau_isMatched, "OfflineTau_isMatched/I");
+  treeOut->Branch("L1Tau_isMerged", &out_L1Tau_isMerged, "L1Tau_isMerged/I");
+  treeOut->Branch("supercompressedE", &out_supercompressedE, "supercompressedE/I");
+  treeOut->Branch("supercompressednTT", &out_supercompressednTT, "supercompressednTT/I");
+  treeOut->Branch("L1Tau_Qual",&out_L1Tau_Qual, "out_L1Tau_Qual/I");
 
   map<int, int> remap;
   remap[0] = 6 ;
@@ -225,9 +229,9 @@ void ApplyCalibration(TString InputFileName = "/home/sbhowmik/RootTree/L1TauTrig
   // pt in 40-50
   vector<int> veto_set_40 = {127, 119, 99, 103, 20, 111, 23, 19, 27, 4, 55};
 
-  for(UInt_t i = 0 ; i < inTree->GetEntries() ; ++i)
+  for(UInt_t i = 0 ; i < treeIn->GetEntries() ; ++i)
     {
-      inTree->GetEntry(i);
+      treeIn->GetEntry(i);
       if(i%10000==0) cout<<"Entry #"<<i<<endl;
       out_L1Tau_IEta = abs(L1Tau_IEta);
       out_L1Tau_hasEM = L1Tau_hasEM;
@@ -274,14 +278,14 @@ void ApplyCalibration(TString InputFileName = "/home/sbhowmik/RootTree/L1TauTrig
 	}
       if(!out_L1Tau_isMerged)
 	{
-	  out_L1Tau_CalibConstant = h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1);
+	  out_L1Tau_CalibConstant = histLUT_0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1);
 	  if(out_L1Tau_CalibConstant>1.3) out_L1Tau_CalibConstant = 1.3;
 	  // if(out_L1Tau_CalibConstant>1.7) out_L1Tau_CalibConstant = 1.7;
 	  out_L1Tau_CalibPt = out_L1Tau_CalibConstant*L1Tau_IEt/2.;
 	}
       else
 	{
-	  out_L1Tau_CalibConstant = h_LUT_isMerged1->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1);
+	  out_L1Tau_CalibConstant = histLUT_1->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1);
 	  if(out_L1Tau_CalibConstant>1.3) out_L1Tau_CalibConstant = 1.3;
 	  // if(out_L1Tau_CalibConstant>1.7) out_L1Tau_CalibConstant = 1.7;
 	  out_L1Tau_CalibPt = out_L1Tau_CalibConstant*L1Tau_IEt/2.;
@@ -289,7 +293,7 @@ void ApplyCalibration(TString InputFileName = "/home/sbhowmik/RootTree/L1TauTrig
       out_L1Tau_Qual = L1Tau_Qual;
       isolation_vs_pt->Fill(L1Tau_Iso,out_L1Tau_IEt);
 
-      outTree.Fill();
+      treeOut->Fill();
     }
-  outTree.Write();
+  treeOut->Write();
 }
