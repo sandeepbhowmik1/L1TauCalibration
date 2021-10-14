@@ -186,6 +186,7 @@ void MakeTreeForCalibration()
   treeOut->Branch("Target", &out_Target, "Target/F");
   treeOut->Branch("L1Tau_Qual", &out_l1tEmuQual, "L1Tau_Qual/I");
   treeOut->Branch("L1Tau_IsoFlag", &out_l1tEmuIso, "L1Tau_IsoFlag/I");
+  treeOut->Branch("Nvtx", &out_Nvtx, "Nvtx/I");
 
   for(UInt_t i = 0 ; i < treeIn->GetEntries() ; ++i)
     {
@@ -234,6 +235,7 @@ void MakeTreeForCalibration()
 	  out_tauPhi = tauPhi;
 	  out_tauCharge = tauCharge;
 	  out_tauDecayMode = tauDecayMode;
+	  out_Nvtx = Nvtx;
 
 	  out_l1tQual = l1tEmuQual->at(iMatchedL1Tau);
 	  out_l1tPt = l1tEmuPt->at(iMatchedL1Tau);

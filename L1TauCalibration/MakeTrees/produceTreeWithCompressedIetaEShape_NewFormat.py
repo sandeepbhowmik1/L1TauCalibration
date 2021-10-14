@@ -59,6 +59,7 @@ data = {"RunNumber"     :array.array('i',[0]),
         "L1Tau_hasEM"    :array.array('i',[0]),
         "L1Tau_Qual"     :array.array('i',[0]),
         "L1Tau_nTT"      :array.array('i',[0]),
+        "Nvtx"      :array.array('i',[0]),
         "L1Tau_Iso"      :array.array('i',[0]),
         "L1Tau_IsoFlag"      :array.array('i',[0]),
         "compressedieta" :array.array('i',[0]),
@@ -84,6 +85,7 @@ for e in xrange(nentries):
     data["L1Tau_hasEM"][0] =   int(inputTree.L1Tau_hasEM)
     data["L1Tau_Qual"][0] =   int(inputTree.L1Tau_Qual)
     data["L1Tau_nTT"][0] =   int(inputTree.L1Tau_nTT)
+    data["Nvtx"][0] =   int(inputTree.Nvtx)
     data["L1Tau_Iso"][0] =   int(inputTree.L1Tau_Iso)
     data["L1Tau_IsoFlag"][0] =   int(inputTree.L1Tau_IsoFlag)
     data["compressedieta"][0]  = int(math.copysign(compressedIeta[abs(data["L1Tau_IEta"][0])], data["L1Tau_IEta"][0]))
@@ -115,6 +117,7 @@ for e in xrange(nentries):
     data["L1Tau_hasEM"][0]   =  inputTree.L1Tau_hasEM
     data["L1Tau_Qual"][0]   =  inputTree.L1Tau_Qual
     data["L1Tau_nTT"][0]   =  inputTree.L1Tau_nTT
+    data["Nvtx"][0]   =  inputTree.Nvtx
     data["L1Tau_Iso"][0]   =  inputTree.L1Tau_Iso
     data["L1Tau_IsoFlag"][0]   =  inputTree.L1Tau_IsoFlag
     data["compressedieta"][0]  = int(math.copysign(compressedIeta[abs(data["L1Tau_IEta"][0])], data["L1Tau_IEta"][0]))

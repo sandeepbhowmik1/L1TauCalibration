@@ -82,7 +82,7 @@ leg.AddEntry(0,"Mean = "+Mean_raw_MC+", RMS = "+RMS_raw_MC, "");
 leg.AddEntry(hist_Et_Reso_calib, "Calibrated L1, MC", "l")
 leg.AddEntry(0,"Mean = "+Mean_calib_MC+", RMS = "+RMS_calib_MC, "");
 
-leg.AddEntry(hist_Et_Reso_default, "Default L1, MC", "l")
+leg.AddEntry(hist_Et_Reso_default, "Re-Emulated L1, MC", "l")
 leg.AddEntry(0,"Mean = "+Mean_default_MC+", RMS = "+RMS_default_MC, "");
 
 hist_Et_Reso_raw.SetLineWidth(2)
